@@ -1,0 +1,10 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: springboot-app
+  namespace: kafka-ssa
+data:
+  APP_NAME: spring-app
+  KAFKA_BOOTSTRAP: 'my-cluster-kafka-bootstrap.kafka-ssa.svc.cluster.local:9092'
+  KAFKA_GROUP_ID: spring-app
+  SPRING_BOOT_PROFILE: dev
