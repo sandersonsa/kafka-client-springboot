@@ -12,9 +12,9 @@ public class KafkaController {
     private xyz.sandersonsa.kafka_consumer.service.MessageProducer messageProducer;
 
     @PostMapping("/send")
-    public String sendMessage(@RequestParam("message") String message) {
-        messageProducer.sendMessage("my-topic", message);
-        return "Message sent: " + message;
+    public String sendMessage(@RequestParam("message") String message, @RequestParam("topic") String topic) {
+        messageProducer.sendMessage(topic, message);
+        return "## Sent to topic " + topic + " with message " + message;
     }
 
 }
