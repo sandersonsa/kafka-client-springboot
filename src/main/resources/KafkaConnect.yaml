@@ -1,0 +1,60 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  annotations:
+    strimzi.io/use-connector-resources: 'true'
+  name: kafka-connect-mirror-1
+  namespace: kafka-source  
+spec:
+  bootstrapServers: 'my-cluster-source-kafka-bootstrap.kafka-source.svc.cluster.local:9092'
+  build:
+    output:
+      image: 'streams-connect:latest'
+      type: imagestream
+    plugins:
+      - artifacts:
+          - type: tgz
+            url: 'https://repo1.maven.org/maven2/org/apache/camel/kafkaconnector/camel-kafka-sink-kafka-connector/4.8.3/camel-kafka-sink-kafka-connector-4.8.3-package.tar.gz'
+        name: camel-kafka-kafka-connector
+  config:
+    status.storage.topic: connect-cluster-status
+    status.storage.replication.factor: -1
+    offset.storage.topic: connect-cluster-offsets
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    group.id: connect-cluster
+    value.converter.schemas.enable: false
+    config.storage.replication.factor: -1
+    config.storage.topic: connect-cluster-configs
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: false
+    offset.storage.replication.factor: -1
+  replicas: 1
+  version: 3.8.0
+status:
+  conditions:
+    - lastTransitionTime: '2025-03-01T01:49:51.704143039Z'
+      status: 'True'
+      type: Ready
+  connectorPlugins:
+    - class: org.apache.camel.kafkaconnector.CamelSinkConnector
+      type: sink
+      version: 4.8.3
+    - class: org.apache.camel.kafkaconnector.kafkasink.CamelKafkasinkSinkConnector
+      type: sink
+      version: 4.8.3
+    - class: org.apache.camel.kafkaconnector.CamelSourceConnector
+      type: source
+      version: 4.8.3
+    - class: org.apache.kafka.connect.mirror.MirrorCheckpointConnector
+      type: source
+      version: 3.8.0.redhat-00007
+    - class: org.apache.kafka.connect.mirror.MirrorHeartbeatConnector
+      type: source
+      version: 3.8.0.redhat-00007
+    - class: org.apache.kafka.connect.mirror.MirrorSourceConnector
+      type: source
+      version: 3.8.0.redhat-00007
+  labelSelector: 'strimzi.io/cluster=kafka-connect-mirror-1,strimzi.io/name=kafka-connect-mirror-1-connect,strimzi.io/kind=KafkaConnect'
+  observedGeneration: 11
+  replicas: 1
+  url: 'http://kafka-connect-mirror-1-connect-api.kafka-source.svc:8083'
