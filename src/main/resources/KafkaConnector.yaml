@@ -104,3 +104,42 @@ spec:
     camel.kamelet.kafka-sink.password: ''
     camel.kamelet.kafka-sink.topic: my-topic-mm2
   tasksMax: 1
+
+---
+# V final sem transformers, enviando json e não string simples
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  labels:
+    strimzi.io/cluster: kafka-connect-mirror-1
+  name: camel-sink-connector
+  namespace: kafka-source  
+spec:
+  class: org.apache.camel.kafkaconnector.kafkasink.CamelKafkasinkSinkConnector
+  config:    
+    topics: my-topic-mm2
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: 'false'
+    value.converter.schemas.enable: 'false'
+    # Sink Config
+    camel.sink.kafka.brokers: 'my-cluster-target-kafka-bootstrap.kafka-target.svc.cluster.local:9092'
+    camel.sink.kafka.topic: my-topic-mm2
+    camel.sink.kafka.key.serializer: org.apache.kafka.common.serialization.StringSerializer
+    camel.sink.kafka.value.serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    # Source Config
+    camel.source.kafka.topic: my-topic-mm2
+    camel.source.kafka.brokers: 'my-cluster-source-kafka-bootstrap.kafka-source.svc.cluster.local:9092'
+    camel.source.kafka.key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    camel.source.kafka.value.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    # Transformations
+    transforms: dropField
+    transforms.dropField.type: org.apache.kafka.connect.transforms.ReplaceField$Value
+    transforms.dropField.blacklist: title
+    # kamelet - required para CamelKafkasinkSinkConnector
+    camel.kamelet.kafka-sink.securityProtocol: PLAINTEXT
+    camel.kamelet.kafka-sink.bootstrapServers: 'my-cluster-target-kafka-bootstrap.kafka-target.svc.cluster.local:9092'
+    camel.kamelet.kafka-sink.user: ''
+    camel.kamelet.kafka-sink.password: ''
+    camel.kamelet.kafka-sink.topic: my-topic-mm2
+  tasksMax: 1

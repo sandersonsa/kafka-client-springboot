@@ -16,11 +16,11 @@ public class MessageConsumer {
         try {
             String json = message.replaceAll("=", ":");
             JSONObject jsonObject = new JSONObject(json);
-            logger.info("\n## RECEIVED JSON MESSAGE: {}\n## ON TOPIC: {}", jsonObject.toString(), "${kafka.consumer.topic}");
+            logger.info("\n\n## RECEIVED JSON MESSAGE: {}\n## ON TOPIC: {}", jsonObject.toString(), "${kafka.consumer.topic}");
         } catch (Exception e) {
             logger.error("Error: {}", e.getMessage());
         }        
-        logger.info("\n## RECEIVED MESSAGE: {}\n## ON TOPIC: {}", message, "${kafka.consumer.topic}");
+        // logger.info("\n## RECEIVED MESSAGE: {}\n## ON TOPIC: {}", message, "${kafka.consumer.topic}");
     }
 
 }
