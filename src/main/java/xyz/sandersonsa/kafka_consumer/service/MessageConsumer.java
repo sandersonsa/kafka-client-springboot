@@ -14,8 +14,9 @@ public class MessageConsumer {
     @KafkaListener(topics = "${kafka.consumer.topic}", groupId = "${spring.kafka.consumer.group-id}")
     public void listen(String message) {
         try {
-            JSONObject json = new JSONObject(message);
-            logger.info("\n## RECEIVED JSON MESSAGE: {}\n## ON TOPIC: {}", json.get("message"), "${kafka.consumer.topic}");
+            String json = message.replaceAll("=", ":");
+            JSONObject jsonObject = new JSONObject(json);
+            logger.info("\n## RECEIVED JSON MESSAGE: {}\n## ON TOPIC: {}", jsonObject.toString(), "${kafka.consumer.topic}");
         } catch (Exception e) {
             logger.error("Error: {}", e.getMessage());
         }        
