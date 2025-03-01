@@ -9,3 +9,6 @@ oc expose service/springboot-app
 curl --location --request POST 'http://{URL_APP}/send?topic=sanderson&message=hello%20world'
 
 
+
+oc new-app registry.access.redhat.com/ubi8/openjdk-17~https://github.com/sandersonsa/kafka-client-springboot.git#kafka-consumer \
+    --name=kafka-consumer-source

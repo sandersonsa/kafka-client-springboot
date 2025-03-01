@@ -12,7 +12,7 @@ public class MessageConsumer {
 
     @KafkaListener(topics = "${kafka.consumer.topic}", groupId = "${spring.kafka.consumer.group-id}")
     public void listen(String message) {
-        logger.info("## RECEIVED MESSAGE: {}\n##ON TOPIC: {}", message, "${kafka.consumer.topic}");
+        logger.info("\n## RECEIVED MESSAGE: {}\n##ON TOPIC: {}", message, "${kafka.consumer.topic}");
     }
 
 }
