@@ -10,7 +10,7 @@ public class MessageConsumer {
 
     private static Logger logger = LoggerFactory.getLogger(MessageConsumer.class);
 
-    @KafkaListener(topics = "${kafka.consumer.topic}", groupId = "${kafka.consumer.groupid}")
+    @KafkaListener(topics = "${kafka.consumer.topic}", groupId = "${spring.kafka.consumer.group-id}")
     public void listen(String message) {
         logger.info("## RECEIVED MESSAGE: {}\n##ON TOPIC: {}", message, "${kafka.consumer.topic}");
     }
